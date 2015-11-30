@@ -1,0 +1,22 @@
+Package: ExperimentHub
+Type: Package
+Title: Client to access ExperimentHub resources
+Version: 0.99.1
+Authors@R: 
+    c(person("Bioconductor", "Maintainer", 
+             email="maintainer@bioconductor.org", role="cre"))
+biocViews: Infrastructure, DataImport, GUI, ThirdPartyClient
+Maintainer: Bioconductor Package Maintainer <maintainer@bioconductor.org>
+Description: This package provides a client for the Bioconductor
+    ExperimentHub web resource. The ExperimentHub web resource
+    provides a central location where data from experiments, publications
+    and courses can be accessed. The resource includes metadata for
+    each resource and date of last modification.
+License: Artistic-2.0
+Depends: BiocGenerics (>= 0.15.10), S4Vectors, AnnotationHubData (>= 1.1.4),
+    AnnotationHub
+Imports: methods, RSQLite, BiocInstaller, httr, curl
+Suggests: RUnit, knitr, BiocStyle
+biocViews: Infrastructure, DataImport, GUI, ThirdPartyClient
+VignetteBuilder: knitr
+NeedsCompilation: yes

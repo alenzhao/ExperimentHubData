@@ -1,0 +1,21 @@
+import(methods)
+import(BiocGenerics)
+import(httr)
+import(AnnotationHub)
+import(AnnotationHubData)
+
+importFrom(BiocInstaller, biocVersion)
+
+importFrom(curl, new_handle, curl, handle_setopt)
+
+exportClasses(ExperimentHubMetadata) 
+
+export(
+  ExperimentHubMetadata,
+  writeMetadataDF, importMetadataDF,
+  runRecipes, addResources
+)
+
+exportMethods(
+  runRecipes
+)
