@@ -1,2 +1,2 @@
-# ExperimentHub
-Client to access ExperimentHub resources
+# ExperimentHubData
+Add metadata to the ExperimentHub db and data files to AWS S3 buckets
