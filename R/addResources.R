@@ -54,8 +54,7 @@ importMetadataDF <- function(pathToPackage)
 ## NOTE: This function replaces AnnotationHubData::updateResources().
 ##       An alternative is to make updateResources() more flexible ...
 addResources <- function(ExperimentHubRoot, pathToPackage, pathToData, 
-                         metadataOnly=TRUE, insert=FALSE,
-                         justRunUnitTest=FALSE, ...) 
+                         metadataOnly=TRUE, insert=FALSE, ...)
 {
 
     if (insert) {
@@ -65,7 +64,6 @@ addResources <- function(ExperimentHubRoot, pathToPackage, pathToData,
                         "in .Rprofile"))
     }
 
-    ## FIXME: better way to handle DF with multiple rows? 
     DF <- importMetadataDF(pathToPackage)
     metadata <- lapply(seq_len(nrow(DF)), 
         function(i) {
