@@ -21,9 +21,9 @@ The ExperimentHubData package provides tools to add data resources to
 Bioconductor's ExperimentHub. This 'hub' houses curated data from courses,
 publications or experiments. Because these resources are the static endpoint of
 a specific activity they are not expected to change over time (unless a bug is
-found).  These resources are not raw files as in `AnnotationHub` but instead
-`R` objects such as GRanges, SummarizedExperiment, data.frame etc.  Each
-resource has associated metadata that can be searched through the
+found).  These resources are not raw files (as offered in `AnnotationHub`)
+but instead `R` objects such as GRanges, SummarizedExperiment, data.frame etc.
+Each resource has associated metadata that can be searched through the
 `ExperimentHub` client interface.
 
 This document describes how to add prepare and add resources to `ExperimentHub`. 
@@ -91,9 +91,8 @@ retrieves the data objects we are ready to add resources.
 The `addResources` function performs two primary steps: push
 data objects to AWS S3 buckets and insert metadata in the MySQL db. 
 
-Before calling `addResources` the 
+**TODO** set POST option
  
-Setting
 'metadataOnly = TRUE' will generate metadata but not download the data or push
 to S3 buckets. 'insert = FALSE' will generate the metadata but not insert it in
 the db. This is a good option for testing the metadata and confirming that all
@@ -104,8 +103,7 @@ addResources(pathToPackage, metadataOnly = TRUE, insert = FALSE)
 ```
 
 Downloading and pushing to S3 requires that aws command line tools is installed
-installed and that the local directory has adequate
-disk space for the files.
+installed and that the local directory has adequate disk space for the files.
 
 Confirm you have aws command line tools installed and access help:
 
@@ -114,9 +112,8 @@ aws s3 help
 ```
 
 Inserting metadata in the MySQL db requires access to the `ExperimentHub`
-server. A
-convenient way to interact with the db is with the ExperimentHubServer Docker
-container. This service downloads a copy of the production db and enables local
-inserts and modifications. The changes can be tested locally then dumped and
-copied back to the production db. Instructions for using the
-ExperimentHubServer Docker can be found [here](**TODO**).
+server. A convenient way to interact with the db is with the
+ExperimentHubServer Docker container. This service downloads a copy of the
+production db and enables local inserts and modifications. The changes can be
+tested locally then dumped and copied back to the production db. Instructions
+for using the ExperimentHubServer Docker can be found [here](**TODO**).
