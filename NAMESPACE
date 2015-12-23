@@ -1,5 +1,6 @@
 import(methods)
 import(BiocGenerics)
+import(S4Vectors)
 import(httr)
 import(AnnotationHub)
 import(AnnotationHubData)
@@ -12,10 +13,6 @@ exportClasses(ExperimentHubMetadata)
 
 export(
   ExperimentHubMetadata,
-  writeMetadataDF, importMetadataDF,
-  runRecipes, addResources
-)
-
-exportMethods(
-  runRecipes
+  readMetadata, makeMetadataFromCsv,
+  addResources
 )

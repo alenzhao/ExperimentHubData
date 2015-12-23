@@ -9,8 +9,7 @@
 }
 
 \usage{
-addResources(pathToPackage, metadataOnly = TRUE, insert = FALSE,
-             justRunUnitTest = FALSE, ...)
+addResources(pathToPackage, metadataOnly = TRUE, insert = FALSE, ...)
 }
 
 \arguments{
@@ -31,15 +30,11 @@ addResources(pathToPackage, metadataOnly = TRUE, insert = FALSE,
     db. By default this option is FALSE which is a useful state in which
     to test a new recipe and confirm the metadata fields are correct.
  
-    When \code{insert = TRUE}, the "EXPERIMENT_HUB_SERVER_POST_URL" global 
-    option must be set to the http location of the ExperimentHubServer in
-    the global environment or .Rprofile. Additionally, AWS command line tools
-    must be installed on the local machine to push files to S3 buckets.
-    See https://aws.amazon.com/cli/ for installation instructions.
-  }
-  \item{justRunUnitTest}{
-    A \code{logical}. When TRUE, a small number of records (usually 5) are
-    processed instead of all.
+    When \code{insert = TRUE}, the "EXPERIMENT_HUB_SERVER_POST_URL" global
+    option must be set to the http location of the ExperimentHubServer in the
+    global environment or .Rprofile. This option controls Additionally, AWS
+    command line tools must be installed on the local machine to push files to
+    S3 buckets.  See https://aws.amazon.com/cli/ for installation instructions.
   }
   \item{\dots}{
     Arguments passed to \code{pushResources} and \code{pushMetadata}. See 
@@ -54,11 +49,10 @@ addResources(pathToPackage, metadataOnly = TRUE, insert = FALSE,
            \code{addResources} is responsible for creating and inserting
            metadata records as well as pushing data files to AWS S3 buckets.
  
-           By manipulating the \code{metadataOnly}, \code{insert} and
-           \code{justRunUnitTest} arguments one can test metadata
-           generation with a small number of records with or without 
-           pushing data files to S3.
-
+           By manipulating the \code{metadataOnly} and \code{insert}
+           arguments the insertion of metadata can be decoupled from the pushing
+           of data files to S3. This is useful for testing or performing a
+           single step vs both.
 
       \item global options: 
 

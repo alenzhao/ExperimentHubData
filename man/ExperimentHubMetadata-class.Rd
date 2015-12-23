@@ -12,13 +12,11 @@
 % Accessors:
 
 % Methods:
-\alias{runRecipes,ExperimentHubMetadata-method}
 
 % Other:
-\alias{writeMetadataDF}
-\alias{importMetadataDF}
 
 % Show:
+\alias{show,ExperimentHubMetadata-method}
 
 
 \title{Class \code{"ExperimentHubMetadata"} and methods}
@@ -31,22 +29,28 @@
 }
 
 \usage{
-ExperimentHubMetadata(ExperimentHubRoot=NA_character_, SourceUrl, SourceType, 
-        SourceVersion, SourceLastModifiedDate=as.POSIXct(NA_character_), 
-        SourceMd5=NA_character_, SourceSize=NA_real_,
-        DataProvider, Title, Description,
-        Species, TaxonomyId=NA_integer_, Genome, Tags,
-        RDataClass, RDataDateAdded, RDataPath,
-        Maintainer, BiocVersion=biocVersion(), Coordinate_1_based=TRUE,
+ExperimentHubMetadata(ExperimentHubRoot=NA_character_, 
+        BiocVersion=biocVersion(),
+        SourceUrl=NA_character_, 
+        SourceType=NA_character_, 
+        SourceVersion=NA_character_, 
+        SourceLastModifiedDate=as.POSIXct(NA_character_), 
+        SourceMd5=NA_character_, 
+        SourceSize=NA_real_,
+        DataProvider=NA_character_, 
+        Title=NA_character_, 
+        Description=NA_character_,
+        Maintainer=NA_character_, 
+        Species=NA_character_, 
+        TaxonomyId=NA_integer_, 
+        Genome=NA_character_, 
+        Tags=NA_character_,
+        RDataClass=NA_character_, 
+        RDataDateAdded=as.POSIXct(NA_character_),
+        RDataPath=NA_character_,
+        Coordinate_1_based=TRUE,
         Notes=NA_character_,
         Location_Prefix='http://s3.amazonaws.com/experimenthub/')
-
-writeMetadataDF(Title, Description, BiocVersion, Genome, 
-                SourceType, SourceUrl, SourceVersion, Species,
-                TaxonomyId, RDataPath, Coordinate_1_based, 
-                DataProvider, Maintainer, RDataClass, Tags) 
-
-importMetadataDF(pathToPackage) 
 }
 
 \arguments{
@@ -134,11 +138,7 @@ importMetadataDF(pathToPackage)
 }
 
 \value{
-  \code{ExperimentHubMetadata} returns an instance of the class.
-  
-  \code{writeMetadataDF} returns nothing
-
-  \code{importMetadataDF} returns a DataFrame of metadata; one row per record.
+  An instance of the class.
 }
 
 \seealso{

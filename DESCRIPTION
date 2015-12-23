@@ -1,7 +1,7 @@
 Package: ExperimentHubData
 Type: Package
 Title: Add resources to ExperimentHub
-Version: 0.99.4
+Version: 0.99.5
 Authors@R: 
     c(person("Bioconductor", "Maintainer", 
              email="maintainer@bioconductor.org", role="cre"))
@@ -12,8 +12,8 @@ Description: Functions to add metadata to ExperimentHub db and
 License: Artistic-2.0
 Depends: BiocGenerics (>= 0.15.10), S4Vectors, AnnotationHubData (>= 1.1.4),
     AnnotationHub
-Imports: methods, RSQLite, BiocInstaller, httr, curl
-Suggests: RUnit, knitr, BiocStyle
+Imports: methods, BiocInstaller, httr, curl
+Suggests: GenomeInfoDb, RUnit, knitr, BiocStyle
 biocViews: Infrastructure, DataImport, GUI, ThirdPartyClient
 VignetteBuilder: knitr
 NeedsCompilation: yes

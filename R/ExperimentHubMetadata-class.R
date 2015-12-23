@@ -52,12 +52,11 @@ ExperimentHubMetadata <-
     Coordinate_1_based <- as.logical(Coordinate_1_based)
     TaxonomyId <- as.integer(TaxonomyId)
     if(!(isSingleInteger(TaxonomyId) || is.na(TaxonomyId)))
-        stop(wmsg(paste0("ExperimentHubMetdata objects can contain",
-                         " only one taxonomy ID or NA")))
+        stop(paste0("ExperimentHubMetdata objects can contain",
+                    " only one taxonomy ID or NA"))
 
     if(any(is.na(SourceUrl)))
-        stop(wmsg(paste0("ExperimentHubMetdata SourceUrl slot cannot",
-                         " contain NAs")))
+        stop(paste0("ExperimentHubMetdata SourceUrl slot cannot contain NAs"))
 
     if (missing(RDataPath)) { 
         ## Add two characters: one for substr starting AT clipChars
