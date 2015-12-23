@@ -20,7 +20,7 @@ addResources <- function(pathToPackage, metadataOnly=TRUE,
 
     ## generate metadata
     message("generating metadata ...") 
-    metadata <- makeMetadataFromCsv(pathToPackage)
+    metadata <- makeExperimentHubMetadata(pathToPackage)
 
     ## push data files to S3 
     if(!metadataOnly) {

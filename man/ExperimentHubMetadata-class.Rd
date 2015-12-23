@@ -131,10 +131,6 @@ ExperimentHubMetadata(ExperimentHubRoot=NA_character_,
     \item{Notes}{
       \code{character()} Notes about the resource.
     }
-    \item{pathToPackage}{
-      \code{character()} Path to the data package for the resource(s) to be 
-      added to ExperimentHub.
-    }
 }
 
 \value{

@@ -1,9 +1,9 @@
 ### =========================================================================
-### readMetadata(), makeMetadataFromCsv()
+### readMetadataFromCsv(), makeExperimentHubMetadata()
 ### -------------------------------------------------------------------------
 ###
 
-readMetadata <- function(pathToPackage) 
+readMetadataFromCsv <- function(pathToPackage) 
 {
      meta <- read.csv(file.path(pathToPackage, "inst/extdata/metadata.csv"))
 
@@ -25,9 +25,9 @@ readMetadata <- function(pathToPackage)
     meta
 }
 
-makeMetadataFromCsv <- function(pathToPackage) 
+makeExperimentHubMetadata <- function(pathToPackage) 
 {
-    meta <- readMetadata(pathToPackage)
+    meta <- readMetadataFromCsv(pathToPackage)
     apply(meta, 1, 
         function(xx) {
             args <- sapply(xx, function(elt) 

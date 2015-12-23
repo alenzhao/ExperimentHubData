@@ -1,7 +1,8 @@
 \name{makeMetadataFromCsv}
 
-\alias{makeMetadataFromCsv}
-\alias{readMetadata}
+\alias{makeExperimentHubMetadata}
+\alias{readMetadataFromCsv}
+\alias{metadata}
 
 \title{Metadata File Helpers}
 
@@ -10,8 +11,8 @@
 }
 
 \usage{
-  makeMetadataFromCsv(pathToPackage)
-  readMetadata(pathToPackage)
+  makeExperimentHubMetadata(pathToPackage)
+  readMetadataFromCsv(pathToPackage)
 }
 
 \arguments{
@@ -61,11 +62,16 @@
 }
 
 \value{
-    A data.frame for \code{readMetadata} and a list of
-    \code{ExperimentHubMetadata} objects for \code{makeMetadataFromCsv}.
+    A data.frame for \code{readMetadataFromCsv} and a list of
+    \code{ExperimentHubMetadata} objects for \code{makeExperimetHubMetadata}.
 }
 
 \seealso{
+  ## TODO
+}
+
+\examples{
+  ## TODO
 }
 
 \keyword{methods}

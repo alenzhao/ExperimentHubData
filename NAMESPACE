@@ -13,6 +13,6 @@ exportClasses(ExperimentHubMetadata)
 
 export(
   ExperimentHubMetadata,
-  readMetadata, makeMetadataFromCsv,
+  readMetadataFromCsv, makeExperimentHubMetadata,
   addResources
 )
