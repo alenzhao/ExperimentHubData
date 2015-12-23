@@ -14,27 +14,43 @@ setClass("ExperimentHubMetadata",
 )
 
 ## -----------------------------------------------------------------------------
-## constructor
+## Constructor
 ## 
 
 ExperimentHubMetadata <-
-    function(ExperimentHubRoot=NA_character_, SourceUrl, SourceType, 
-        SourceVersion, SourceLastModifiedDate=as.POSIXct(NA_character_), 
-        SourceMd5=NA_character_, SourceSize=NA_real_,
-        DataProvider, Title, Description,
-        Species, TaxonomyId=NA_integer_, Genome, Tags,
-        RDataClass, RDataDateAdded, RDataPath,
-        Maintainer, BiocVersion=biocVersion(), Coordinate_1_based=TRUE,
+    function(ExperimentHubRoot=NA_character_, 
+        BiocVersion=biocVersion(),
+        SourceUrl=NA_character_, 
+        SourceType=NA_character_, 
+        SourceVersion=NA_character_, 
+        SourceLastModifiedDate=as.POSIXct(NA_character_), 
+        SourceMd5=NA_character_, 
+        SourceSize=NA_real_,
+        DataProvider=NA_character_, 
+        Title=NA_character_, 
+        Description=NA_character_,
+        Maintainer=NA_character_, 
+        Species=NA_character_, 
+        TaxonomyId=NA_integer_, 
+        Genome=NA_character_, 
+        Tags=NA_character_,
+        RDataClass=NA_character_, 
+        RDataDateAdded=as.POSIXct(NA_character_),
+        RDataPath=NA_character_,
+        Coordinate_1_based=TRUE,
         Notes=NA_character_,
         Location_Prefix='http://s3.amazonaws.com/experimenthub/')
 {
     ## FIXME: move these checks to a general validity method
-    ##        on HubMetadata that can be reused?
+    ##        on HubMetadata that can be reused
     if (is.na(TaxonomyId)) {
         if (!is.na(Species) &&
             requireNamespace("AnnotationHubData", quietly=TRUE))
             TaxonomyId <- GenomeInfoDb:::.taxonomyId(Species)
     }
+    ## FIXME: where should these coercions be handled?
+    Coordinate_1_based <- as.logical(Coordinate_1_based)
+    TaxonomyId <- as.integer(TaxonomyId)
     if(!(isSingleInteger(TaxonomyId) || is.na(TaxonomyId)))
         stop(wmsg(paste0("ExperimentHubMetdata objects can contain",
                          " only one taxonomy ID or NA")))
@@ -54,9 +70,7 @@ ExperimentHubMetadata <-
         as.POSIXct(strsplit(
             as.character(RDataDateAdded), " ")[[1]][1], tz="GMT")
 
-    mustBeSingleStringNoCommasOrNA <- 
-        c(SourceType, Location_Prefix, RDataClass)
-    lapply(mustBeSingleStringNoCommasOrNA, 
+    lapply(c(SourceType, Location_Prefix, RDataClass),
         AnnotationHubData:::.checkThatSingleStringAndNoCommas) 
     lapply(c(Genome, Species), 
         AnnotationHubData:::.checkThatSingleStringOrNA)
@@ -94,33 +108,39 @@ ExperimentHubMetadata <-
 }
 
 ## ------------------------------------------------------------------------------
-## getters and setters
+## Getters and setters
 ## 
 
 ## TODO
 
 ## -----------------------------------------------------------------------------
-## validity 
+## Validity 
 ## 
 
 ## TODO
 
-## -----------------------------------------------------------------------------
-## methods 
+## ------------------------------------------------------------------------------
+## show 
 ## 
 
-setMethod("runRecipes", "ExperimentHubMetadata",
-    function(metadata, hubroot, 
-             bucket=getOption("ANNOTATION_HUB_BUCKET_NAME", "experimenthub"), 
-             ...)
-    {
-        ## Note: allow for download from ftp site or ?
-
-        ## upload to S3
-        fileToUpload <- file.path(metadata(metadata)$HubRoot,
-                                  metadata(metadata)$RDataPath)
-        remotePath <- sub("^/", "", metadata(metadata)$RDataPath)
-        res <- upload_to_S3(fileToUpload, remotePath, bucket, ...)
-        ## TODO - if download is successful, delete local file?
+setMethod("show", "ExperimentHubMetadata",
+   function(object)
+{
+    cat("class: ", class(object), '\n', sep='')
+    for (slt in c("Title", "Description", "BiocVersion", "Genome",
+                  "Species", "TaxonomyId", "Location_Prefix", 
+                  "RDataClass", "RDataDateAdded",
+                  "RDataPath", "SourceLastModifiedDate", "SourceType",
+                  "SourceUrl", "SourceVersion", "Tags")) {
+        value <- slot(object, slt)
+        txt <- paste0(slt, ": ", paste0(as.character(value), collapse=" "))
+        cat(strwrap(txt), sep="\n  ")
     }
-)
+})
+
+
+
+
+
+
+

@@ -3,58 +3,58 @@
 ### -------------------------------------------------------------------------
 ###
 
-writeMetadataDF <- function(Title, Description, BiocVersion, Genome, 
-                            SourceType, SourceUrl, SourceVersion, Species,
-                            TaxonomyId, RDataPath, Coordinate_1_based, 
-                            DataProvider, Maintainer, RDataClass, Tags) 
+readMetadata <- function(pathToPackage) 
 {
-
-    meta <- DataFrame(
-        Title = CharacterList(Title),
-        Description = CharacterList(Description),
-        BiocVersion = CharacterList(BiocVersion),
-        Genome = CharacterList(Genome),
-        SourceType = CharacterList(SourceType),
-        SourceUrl = CharacterList(SourceUrl),
-        SourceVersion = CharacterList(SourceVersion),
-        Species = CharacterList(Species),
-        TaxonomyId = IntegerList(TaxonomyId),
-        Coordinate_1_based = LogicalList(Coordinate_1_based),
-        DataProvider = CharacterList(DataProvider),
-        Maintainer = CharacterList(Maintainer),
-        RDataClass = CharacterList(RDataClass),
-        Tags = CharacterList(Tags))
-
-    saveRDS(meta, file = "metadata.Rda") 
-}
-
-importMetadataDF <- function(pathToPackage) 
-{
-     meta <- readRDS(file.path(pathToPackage, "inst/extdata/metadata.Rda"))
-     ## FIXME: data.frame also ok?
-     if (!is(meta, "DataFrame"))
-         stop("metadata.Rda must contain a single 'DataFrame' object")
+     meta <- read.csv(file.path(pathToPackage, "inst/extdata/metadata.csv"))
 
      fields <- c("Title", "Description", "BiocVersion", "Genome", 
                  "SourceType", "SourceUrl", "SourceVersion", "Species", 
                  "TaxonomyId", "Coordinate_1_based", "DataProvider", 
                  "Maintainer", "RDataClass", "Tags")
-     if (any(missing <- !names(meta) %in% fields))
-         stop(paste0("missing fields in metadata.Rda: ", 
+     missing <- !names(meta) %in% fields
+     if (any(missing))
+         stop(paste0("missing fields in metadata.csv: ", 
                      paste(names(meta)[missing], collapse=", ")))
-     if (any(invalid <- !fields %in% names(meta)))
-         stop(paste0("invalid fields in metadata.Rda: ", 
+     invalid <- !fields %in% names(meta)
+     if (any(invalid))
+         stop(paste0("invalid fields in metadata.csv: ", 
                      paste(fields[invalid], collapse=", ")))
 
-    DataFrame(meta, RDataDateAdded=CharacterList(Sys.time()))
+    meta$RDataDateAdded <- rep(Sys.time(), nrow(meta))
+    meta$RDataPath <- rep("http://s3.amazonaws.com/experimenthub/", nrow(meta)) 
+    meta
 }
+
+makeMetadataFromCsv <- function(pathToPackage) 
+{
+    meta <- readMetadata(pathToPackage)
+    apply(meta, 1, 
+        function(xx) {
+            args <- sapply(xx, function(elt) 
+                strsplit(as.character(elt), ",", fixed=TRUE))
+            with(args, 
+                ExperimentHubMetadata(Title=Title, Description=Description, 
+                                      BiocVersion=BiocVersion, Genome=Genome, 
+                                      SourceType=SourceType, SourceUrl=SourceUrl,
+                                      SourceVersion=SourceVersion, 
+                                      Species=Species, TaxonomyId=TaxonomyId,
+                                      Coordinate_1_based=Coordinate_1_based, 
+                                      DataProvider=DataProvider,
+                                      Maintainer=Maintainer, 
+                                      RDataClass=RDataClass, Tags=Tags, 
+                                      RDataDateAdded=RDataDateAdded, 
+                                      RDataPath=RDataPath)) 
+        }
+    )
+}
+
 
 ## NOTE: 'HubRoot' is the local prefix; 'pathToData' is used both
 ##        locally (to find the file) and remotely (to store the file).
 ## NOTE: This function replaces AnnotationHubData::updateResources().
 ##       An alternative is to make updateResources() more flexible ...
-addResources <- function(ExperimentHubRoot, pathToPackage, pathToData, 
-                         metadataOnly=TRUE, insert=FALSE, ...)
+addResources <- function(pathToPackage, metadataOnly=TRUE, 
+                         insert=FALSE, justRunUnitTest=FALSE, ...)
 {
 
     if (insert) {
@@ -64,25 +64,24 @@ addResources <- function(ExperimentHubRoot, pathToPackage, pathToData,
                         "in .Rprofile"))
     }
 
-    DF <- importMetadataDF(pathToPackage)
-    metadata <- lapply(seq_len(nrow(DF)), 
-        function(i) {
-            row <- lapply(DF[i,], unlist)
-            do.call(ExperimentHubMetadata, 
-                    c(list(ExperimentHubRoot, RDataPath=pathToData), row))
-        })
+    ## generate metadata
+    message("generating metadata ...") 
+    metadata <- makeMetadataFromCsv(pathToPackage)
 
-    ## push data to S3 
-    ## FIXME: what is the role of 'ANNOTATION_HUB_BUCKET_NAME';
-    ##        should we implement 'EXPERIMENT_HUB_BUCKET_NAME'?
-    if(!metadataOnly)
+    ## push data files to S3 
+    if(!metadataOnly) {
+        message("pushing data files to S3 ...")
         pushResources(metadata, ExperimentHubRoot, 
-                      bucket = getOption("ANNOTATION_HUB_BUCKET_NAME", 
+                      bucket = getOption("EXPERIMENT_HUB_BUCKET_NAME", 
                                          "experimenthub"))
+    }
 
     ## insert metadata in db
-    if(insert)
+    if(insert) {
+        message("inserting metadata in db ...") 
         pushMetadata(metadata, url)
- 
-    metadata 
+    }
+
+    message("complete!") 
+    metadata
 }

@@ -9,22 +9,13 @@
 }
 
 \usage{
-addResources(ExperimentHubRoot, pathToPackage, pathToData,
-             metadataOnly = TRUE, insert = FALSE,
+addResources(pathToPackage, metadataOnly = TRUE, insert = FALSE,
              justRunUnitTest = FALSE, ...)
 }
 
 \arguments{
-  \item{ExperimentHubRoot}{
-    Prefix of the local path to data objects. This prefix is not included
-    in the path when uploading files to S3.
-  }
   \item{pathToPackage}{
     Local path to data package.
-  }
-  \item{pathToData}{
-    Local path to data objects. This path must exist in the S3 bucket
-    where the data will be uploaded.
   }
   \item{metadataOnly}{
     A \code{logical} to specify the processing of metadata only or both
