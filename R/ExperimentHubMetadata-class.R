@@ -39,6 +39,7 @@ ExperimentHubMetadata <-
         RDataPath=NA_character_,
         Coordinate_1_based=TRUE,
         Notes=NA_character_,
+        DispatchClass=NA_character_,
         Location_Prefix='http://s3.amazonaws.com/experimenthub/')
 {
     ## FIXME: move these checks to a general validity method
@@ -136,10 +137,3 @@ setMethod("show", "ExperimentHubMetadata",
         cat(strwrap(txt), sep="\n  ")
     }
 })
-
-
-
-
-
-
-

@@ -14,7 +14,7 @@ addResources(pathToPackage, metadataOnly = TRUE, insert = FALSE, ...)
 
 \arguments{
   \item{pathToPackage}{
-    Local path to data package.
+    Local path to data package; no trailing slash.
   }
   \item{metadataOnly}{
     A \code{logical} to specify the processing of metadata only or both

@@ -26,8 +26,8 @@ addResources <- function(pathToPackage, metadataOnly=TRUE,
     if(!metadataOnly) {
         message("pushing data files to S3 ...")
         pushResources(metadata, ExperimentHubRoot, 
-                      bucket = getOption("EXPERIMENT_HUB_BUCKET_NAME", 
-                                         "experimenthub"))
+                      bucket=getOption("EXPERIMENT_HUB_BUCKET_NAME", 
+                                       "experimenthub"))
     }
 
     ## insert metadata in db

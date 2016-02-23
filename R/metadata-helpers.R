@@ -3,6 +3,9 @@
 ### -------------------------------------------------------------------------
 ###
 
+
+## TODO: enforce data type
+## TODO: sapply(as.character(row), strsplit, ",", ",", fixed=TRUE)
 readMetadataFromCsv <- function(pathToPackage) 
 {
      meta <- read.csv(file.path(pathToPackage, "inst/extdata/metadata.csv"))
@@ -10,8 +13,9 @@ readMetadataFromCsv <- function(pathToPackage)
      fields <- c("Title", "Description", "BiocVersion", "Genome", 
                  "SourceType", "SourceUrl", "SourceVersion", "Species", 
                  "TaxonomyId", "Coordinate_1_based", "DataProvider", 
-                 "Maintainer", "RDataClass", "Tags")
-     missing <- !names(meta) %in% fields
+                 "Maintainer", "RDataClass", "Tags", "DispatchClass",
+                 "ResourceName")
+     missing <- !fields %in% names(meta)
      if (any(missing))
          stop(paste0("missing fields in metadata.csv: ", 
                      paste(names(meta)[missing], collapse=", ")))
@@ -21,7 +25,10 @@ readMetadataFromCsv <- function(pathToPackage)
                      paste(fields[invalid], collapse=", ")))
 
     meta$RDataDateAdded <- rep(Sys.time(), nrow(meta))
-    meta$RDataPath <- rep("http://s3.amazonaws.com/experimenthub/", nrow(meta)) 
+    path <- paste0("http://s3.amazonaws.com/experimenthub/", 
+                  basename(pathToPackage))
+
+    meta$RDataPath <- paste0(path,"/",meta$ResourceName)
     meta
 }
 
@@ -43,7 +50,8 @@ makeExperimentHubMetadata <- function(pathToPackage)
                                       Maintainer=Maintainer, 
                                       RDataClass=RDataClass, Tags=Tags, 
                                       RDataDateAdded=RDataDateAdded, 
-                                      RDataPath=RDataPath)) 
+                                      RDataPath=RDataPath, 
+                                      DispatchClass=DispatchClass)) 
         }
     )
 }
