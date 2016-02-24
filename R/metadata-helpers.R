@@ -49,8 +49,7 @@ readMetadataFromCsv <- function(pathToPackage)
 
     meta$RDataDateAdded <- rep(Sys.time(), nrow(meta))
     package <- basename(pathToPackage)
-    path <- paste0("http://s3.amazonaws.com/experimenthub/", package) 
-    meta$RDataPath <- paste0(path,"/",meta$ResourceName)
+    meta$RDataPath <- paste0(package,"/",meta$ResourceName)
     meta$PreparerClass <- package 
     meta
 }
