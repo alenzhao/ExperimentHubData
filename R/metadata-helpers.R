@@ -3,26 +3,49 @@
 ### -------------------------------------------------------------------------
 ###
 
-## TODO: enforce data type
 ## TODO: sapply(as.character(row), strsplit, ",", ",", fixed=TRUE)
 readMetadataFromCsv <- function(pathToPackage) 
 {
-     meta <- read.csv(file.path(pathToPackage, "inst/extdata/metadata.csv"),
-                      stringsAsFactors=FALSE)
+    mat <- rbind(c("Title", "character"),
+                 c("Description", "character"),
+                 c("BiocVersion", "character"),
+                 c("Genome", "character"),
+                 c("SourceType", "character"),
+                 c("SourceUrl", "character"),
+                 c("SourceVersion", "character"),
+                 c("Species", "character"),
+                 c("TaxonomyId", "integer"),
+                 c("Coordinate_1_based", "logical"),
+                 c("DataProvider", "character"),
+                 c("Maintainer", "character"),
+                 c("RDataClass", "character"),
+                 c("DispatchClass", "character"),
+                 c("Tags", "character"),
+                 c("ResourceName", "character"))
+    meta <- read.csv(file.path(pathToPackage, "inst/extdata/metadata.csv"),
+                     col.names=mat[,1], colClasses=mat[,2],
+                     stringsAsFactors=FALSE)
 
-     fields <- c("Title", "Description", "BiocVersion", "Genome", 
-                 "SourceType", "SourceUrl", "SourceVersion", "Species", 
-                 "TaxonomyId", "Coordinate_1_based", "DataProvider", 
-                 "Maintainer", "RDataClass", "Tags", "DispatchClass",
-                 "ResourceName")
-     missing <- !fields %in% names(meta)
-     if (any(missing))
-         stop(paste0("missing fields in metadata.csv: ", 
-                     paste(names(meta)[missing], collapse=", ")))
-     invalid <- !fields %in% names(meta)
-     if (any(invalid))
-         stop(paste0("invalid fields in metadata.csv: ", 
-                     paste(fields[invalid], collapse=", ")))
+    ## Rogue columns
+    expected <- mat[,1]
+    missing <- !expected %in% names(meta)
+    if (any(missing))
+        stop(paste0("missing fields in metadata.csv: ", 
+                    paste(expected[missing], collapse=", ")))
+    invalid <- !names(meta) %in% expected 
+    if (any(invalid))
+        warning(paste0("invalid fields in metadata.csv will be ignored: ", 
+                    paste(names(meta)[invalid], collapse=", ")))
+
+    ## All fields must be length 1
+    apply(meta, 1, 
+        function(xx) {
+            valid <- sapply(xx, function(field) length(field) == 1L)
+            if (any(!valid))
+                stop(paste0("all fields in metadata.csv must be a character ",
+                     "string of length 1"))
+        }
+    )
 
     meta$RDataDateAdded <- rep(Sys.time(), nrow(meta))
     package <- basename(pathToPackage)
@@ -37,7 +60,7 @@ makeExperimentHubMetadata <- function(pathToPackage)
     meta <- readMetadataFromCsv(pathToPackage)
     apply(meta, 1, 
         function(xx) {
-            ## Expect BiocVersion and Tags to be comma separated
+            ## BiocVersion and Tags can be comma separated
             xx["BiocVersion"] <- 
                 strsplit(as.character(xx["BiocVersion"]), ",", fixed=TRUE)
             xx["Tags"] <- 
