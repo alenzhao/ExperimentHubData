@@ -40,6 +40,7 @@ ExperimentHubMetadata <-
         Coordinate_1_based=TRUE,
         Notes=NA_character_,
         DispatchClass=NA_character_,
+        PreparerClass=NA_character_,
         Location_Prefix='http://s3.amazonaws.com/experimenthub/')
 {
     ## FIXME: move these checks to a general validity method
@@ -97,13 +98,14 @@ ExperimentHubMetadata <-
         TaxonomyId=TaxonomyId,
         Title=Title,
         Location_Prefix=Location_Prefix,
+        DispatchClass=DispatchClass,
+        PreparerClass=PreparerClass,
         ## FIXME: how to determine 
         SourceSize=NA_real_,
         SourceMd5=NA_character_, 
         SourceLastModifiedDate=as.POSIXct(NA_character_), #from url in AHD
         ## NOTE: not relevant 
-        Recipe=NA_character_,
-        DispatchClass=NA_character_
+        Recipe=NA_character_
     )
 }
 
@@ -126,14 +128,15 @@ ExperimentHubMetadata <-
 setMethod("show", "ExperimentHubMetadata",
    function(object)
 {
-    cat("class: ", class(object), '\n', sep='')
+    cat(class(object), " object: \n", sep='')
     for (slt in c("Title", "Description", "BiocVersion", "Genome",
                   "Species", "TaxonomyId", "Location_Prefix", 
                   "RDataClass", "RDataDateAdded",
                   "RDataPath", "SourceLastModifiedDate", "SourceType",
-                  "SourceUrl", "SourceVersion", "Tags")) {
+                  "SourceUrl", "SourceVersion", "Tags", "DispatchClass")) {
         value <- slot(object, slt)
         txt <- paste0(slt, ": ", paste0(as.character(value), collapse=" "))
         cat(strwrap(txt), sep="\n  ")
     }
+    cat("Package: ", object@PreparerClass, '\n', sep='')
 })
